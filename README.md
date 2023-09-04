@@ -33,5 +33,36 @@
   </tbody>
 </table>
 
+
+## 개발 스택 후보
+### 백엔드
+
+후보
+
+1. Spring Boot + Kotlin + MySQL(MariaDB)
+    1. 테스트: Junit, mock
+2. Nest.js + TS + MySQL(MariaDB)
+    1. 테스트: Jest 또는 Mocha
+
+### 프론트엔드
+
+후보
+
+1. React(Next.js) + TS + Webpack + Redux(Recoil)
+2. React(Next.js) + TS + Rollup + Redux(Recoil)
+
+### 인프라
+
+서버 후보
+
+1. AWS EC2 Ubuntu
+2. GCP Ubuntu
+
+배포 파이프라인 후보
+
+1. Github Action
+2. Jenkins
+3. Travis
+
 ### Archive
 <a href="https://www.notion.so/trip-poor-7a06f9c61c184e92a0f7edcbc2554a86?pvs=4">Notion</a>
