@@ -1,0 +1,16 @@
+{
+  "name": "trip-poor",
+  "packageManager": "yarn@3.6.3",
+  "private": true,
+  "scripts": {
+    "backend:build": "yarn workspace trip-poor-backend start",
+    "backend": "yarn workspace trip-poor-backend start",
+    "backend:dev": "yarn workspace trip-poor-backend start:dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}
