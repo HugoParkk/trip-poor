@@ -39,17 +39,18 @@
 
 후보
 
-1. Spring Boot + Kotlin + MySQL(MariaDB)
-    1. 테스트: Junit, mock
-2. Nest.js + TS + MySQL(MariaDB)
-    1. 테스트: Jest 또는 Mocha
+1. ~~Spring Boot + Kotlin + MySQL(MariaDB)~~
+    1. ~~테스트: Junit, mockito~~
+2. **Nest.js + TS + MySQL(MariaDB)**
+    1. **테스트: Jest 또는 Mocha**
 
 ### 프론트엔드
 
 후보
 
-1. React(Next.js) + TS + Webpack + Redux(Recoil)
-2. React(Next.js) + TS + Rollup + Redux(Recoil)
+1. ~~React(Next.js) + TS + Webpack + Redux(Recoil)~~
+2. ~~React(Next.js) + TS + Rollup + Redux(Recoil)~~
+3. **React + TS**
 
 ### 인프라
 
