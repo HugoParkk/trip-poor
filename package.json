@@ -3,9 +3,12 @@
   "packageManager": "yarn@3.6.3",
   "private": true,
   "scripts": {
-    "backend:build": "yarn workspace trip-poor-backend start",
+    "backend:build": "yarn workspace trip-poor-backend build",
     "backend": "yarn workspace trip-poor-backend start",
-    "backend:dev": "yarn workspace trip-poor-backend start:dev"
+    "backend:dev": "yarn workspace trip-poor-backend start:dev",
+    "backend:debug": "yarn workspace trip-poor-backend start:debug",
+    "backend:prod": "yarn workspace trip-poor-backend start:prod",
+    "backend:lint": "yarn workspace trip-poor-backend lint"
   },
   "workspaces": [
     "packages/*"
