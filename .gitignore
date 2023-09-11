@@ -12,6 +12,7 @@
 
 # Private Enviroments
 packages/trip-poor-backend/config/env/*
+!packages/trip-poor-backend/config/env/.test.env
 
 # OS
 .DS_Store
