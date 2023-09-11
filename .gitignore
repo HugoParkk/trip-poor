@@ -10,7 +10,7 @@
 /node_modules
 
 # Private Enviroments
-packages/trip-poor-backend/config/env/*.env
+packages/trip-poor-backend/config/env/*
 
 # OS
 .DS_Store
