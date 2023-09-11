@@ -6,6 +6,7 @@
 !.yarn/versions
 
 !.yarn/cache
+
 #.pnp.*
 /node_modules
 
@@ -34,4 +35,3 @@ packages/trip-poor-backend/config/env/*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-packages/trip-poor-backend/config/env/.production.env
