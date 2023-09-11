@@ -13,6 +13,7 @@ lerna-debug.log*
 
 # Private Enviroments
 config/env/*
+!config/env/.test.env
 
 # OS
 .DS_Store
