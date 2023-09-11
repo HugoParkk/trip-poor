@@ -29,6 +29,14 @@
           <br />
         </a>
       </td>
+      <td align="center" valign="top" width="14.28%">
+        <a href="https://github.com/rho9819">
+          <img src="https://avatars.githubusercontent.com/u/73219870?v=4" width="100px;" alt="pokoed"/>
+          <br />
+          <sub><b>노범진</b></sub>
+          <br />
+        </a>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -66,4 +74,5 @@
 3. Travis
 
 ### Archive
-<a href="https://www.notion.so/trip-poor-7a06f9c61c184e92a0f7edcbc2554a86?pvs=4">Notion</a>
+<a href="https://www.notion.so/trip-poor-7a06f9c61c184e92a0f7edcbc2554a86?pvs=4">Notion</a><br/>
+<a href="https://www.figma.com/file/drENHiXsWgmXkpJXYfHAZx/Untitled?type=design&node-id=0%3A1&mode=design&t=nTo4w7zVv1bRvoWb-1">Figma</a>
