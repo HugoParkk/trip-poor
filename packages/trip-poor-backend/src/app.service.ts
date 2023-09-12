@@ -14,7 +14,7 @@ export class AppService {
     };
   }
 
-  getHealth(): { [key: string]: string} {
+  getHealth(): { [key: string]: string } {
     return {
       status: 'ok',
     };

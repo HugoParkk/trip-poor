@@ -11,7 +11,7 @@ export class AppController {
   }
 
   @Get('health')
-  getHealth(): { [key: string]: string} {
+  getHealth(): { [key: string]: string } {
     return this.appService.getHealth();
   }
 }
