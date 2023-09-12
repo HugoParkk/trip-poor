@@ -8,9 +8,7 @@ import { UserEntity } from '../entities/userEntity.entity';
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -20,7 +18,10 @@ export class AuthController {
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
-  async googleAuthCallback(@Req() req: Request, @Res() res: Response): Promise<void> {
+  async googleAuthCallback(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     this.logger.debug('googleAuthCallback');
     const { user } = req;
     const jwt: UserEntity = await this.authService.googleLogin(user);

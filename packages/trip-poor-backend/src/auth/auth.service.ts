@@ -7,13 +7,16 @@ import { UserEntity } from '../entities/userEntity.entity';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async googleLogin(googleUser: GoogleUser): Promise<UserEntity> {
     const { provider, providerId, email, name } = googleUser;
 
-    const user: UserEntity = await this.userRepository.findOne({ where: { provider, providerId } });
+    const user: UserEntity = await this.userRepository.findOne({
+      where: { provider, providerId },
+    });
 
     if (user) {
       return user;

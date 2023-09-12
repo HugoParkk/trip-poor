@@ -16,7 +16,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'mysql',
 
       entities: [UserEntity],
-      synchronize: true
+      synchronize: true,
     }),
     AuthModule,
   ],
