@@ -1,11 +1,12 @@
 import { Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { IsDate } from 'class-validator';
 
 export abstract class BaseEntity {
-  @CreateDateColumn('timestamp')
-  @Column()
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP'})
+  @IsDate()
   createdAt: Date;
 
-  @UpdateDateColumn('timestamp')
-  @Column()
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP'})
+  @IsDate()
   updatedAt: Date;
 }

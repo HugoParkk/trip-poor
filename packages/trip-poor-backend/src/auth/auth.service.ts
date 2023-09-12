@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { GoogleUser } from './interfaces/GoogleUser';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -6,17 +6,21 @@ import { UserEntity } from '../entities/userEntity.entity';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async googleLogin(googleUser: GoogleUser): Promise<UserEntity> {
-    const { provider, providerId, email, name } = googleUser;
+    const { provider, providerId, email, name, photoUrl } = googleUser;
 
     const user: UserEntity = await this.userRepository.findOne({
       where: { provider, providerId },
     });
+
+    this.logger.debug(JSON.stringify(user));    
 
     if (user) {
       return user;
@@ -27,6 +31,7 @@ export class AuthService {
     newUser.providerId = providerId;
     newUser.email = email;
     newUser.name = name;
+    newUser.avatar = photoUrl;
 
     return await this.userRepository.save(newUser);
   }

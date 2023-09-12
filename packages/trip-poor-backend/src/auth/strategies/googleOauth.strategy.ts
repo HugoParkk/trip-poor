@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
+import { UserProvider } from '../../enum/userProvider.enum';
 
 @Injectable()
 export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
@@ -17,7 +18,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
     const { id, name, emails, photos } = profile;
 
     return {
-      provider: 'google',
+      provider: UserProvider.GOOGLE,
       providerId: id,
       name: name.givenName,
       email: emails[0].value,
