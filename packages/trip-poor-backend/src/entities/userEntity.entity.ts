@@ -25,6 +25,10 @@ export class UserEntity extends BaseEntity {
   @IsString()
   providerId: string;
 
+  @Column({ nullable: true })
+  @IsString()
+  password: string;
+
   @Column({ default: '' })
   @IsString()
   avatar: string;
