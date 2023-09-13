@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../utils/base.entity';
 import { IsNumber, IsEmail, IsString, IsBoolean } from 'class-validator';
 
@@ -20,6 +20,7 @@ export class UserEntity extends BaseEntity {
   @IsString()
   provider: string;
 
+  @PrimaryColumn()
   @Column()
   @IsString()
   providerId: string;
