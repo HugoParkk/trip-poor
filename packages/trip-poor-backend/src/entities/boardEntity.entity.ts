@@ -1,8 +1,9 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
 import { BaseEntity } from "src/utils/base.entity";
 import { BoardStatus } from "src/utils/enum/boardStatus.enum";
-import { Column, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
+@Entity('Board')
 export class BoardEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   @IsNumber()
