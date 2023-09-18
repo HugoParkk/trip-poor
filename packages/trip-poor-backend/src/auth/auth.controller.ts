@@ -8,6 +8,7 @@ import { JwtPayload } from './interfaces/JwtPayload';
 import { LocalUserReq } from './interfaces/LocalUserReq';
 import { RSACrypto } from 'src/utils/rsaCrypto';
 import { LoginDto } from './interfaces/LoginDto';
+import { ResgisterDto } from './interfaces/RegisterDto';
 
 @Controller('auth')
 export class AuthController {
@@ -38,9 +39,29 @@ export class AuthController {
     }
 
     const user: UserEntity = await this.authService.validateUser(loginDto.email, loginDto.password);
+    this.logger.debug(JSON.stringify(user));
 
+    return user as UserEntity;
+  }
 
-    return req.user as UserEntity;
+  @Post('register')
+  async register(@Req() req: Request, @Res() res: Response, @Body('value') value: string): Promise<Response<UserEntity>> {
+    this.logger.debug('register');
+    
+    if (!value) {
+      throw new BadRequestException('body value not found');
+    }
+
+    const privateKey: string = process.env.RSA_PRIVATE_KEY;
+    const decryptedValue: string = RSACrypto.decrypt(value, privateKey);
+    const registerDto: ResgisterDto = JSON.parse(decryptedValue);
+
+    const user: UserEntity = await this.authService.localRegister(registerDto);
+
+    if(user) {
+      this.logger.debug(user);
+      return res.send(user);
+    }
   }
 
   @Get('google')
