@@ -14,8 +14,6 @@ export class RSACrypto {
   }
 
   public static decrypt(value: string, privateKey: string): string {
-    log(value);
-    log(privateKey);
     const decryptedValue = crypto.privateDecrypt(
       {
         key: privateKey,
@@ -24,5 +22,9 @@ export class RSACrypto {
       Buffer.from(value, 'base64'),
     );
     return decryptedValue.toString('utf8');
+  }
+
+  public static match(value: string, encryptedValue: string, privateKey: string): boolean {
+    return value === RSACrypto.decrypt(encryptedValue, privateKey);
   }
 }
