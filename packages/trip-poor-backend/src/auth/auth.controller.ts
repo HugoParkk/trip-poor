@@ -1,16 +1,47 @@
-import { Controller, Logger, Get, UseGuards, Req, Res } from '@nestjs/common';
+import { Controller, Logger, Get, UseGuards, Req, Res, Post, Body, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
 import { UserEntity } from '../entities/userEntity.entity';
 import { GoogleUser } from './interfaces/GoogleUser';
 import { JwtPayload } from './interfaces/JwtPayload';
+import { LocalUserReq } from './interfaces/LocalUserReq';
+import { RSACrypto } from 'src/utils/rsaCrypto';
+import { LoginDto } from './interfaces/LoginDto';
 
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 
   constructor(private readonly authService: AuthService) {}
+
+  @Post('login')
+  // @UseGuards(AuthGuard('local'))
+  async login(@Req() req: Request, @Body('value') value: string): Promise<UserEntity> {
+    this.logger.debug('login');
+    this.logger.debug(value);
+
+    if (!value) {
+      throw new BadRequestException('body value not found');
+    }
+
+    const privateKey: string = process.env.RSA_PRIVATE_KEY;
+    const decryptedValue: string = RSACrypto.decrypt(value, privateKey);
+    const loginDto: LoginDto = JSON.parse(decryptedValue);
+
+    this.logger.debug(JSON.stringify(loginDto));
+
+    if (loginDto) {
+      if (loginDto.email == null || loginDto.password == null) {
+        throw new BadRequestException('email or password not found');
+      }
+    }
+
+    const user: UserEntity = await this.authService.validateUser(loginDto.email, loginDto.password);
+
+
+    return req.user as UserEntity;
+  }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -36,6 +67,8 @@ export class AuthController {
 
     await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
 
+    this.logger.debug(`accessToken: ${accessToken}`);
+    this.logger.debug(`refreshToken: ${refreshToken}`);
     res.redirect(process.env.DOMAIN);
     // const jwt: UserEntity = await this.authService.googleLogin(user);
     // res.redirect(`http://localhost:3000/login/success?token=${jwt}`);

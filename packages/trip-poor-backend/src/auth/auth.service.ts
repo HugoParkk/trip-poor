@@ -18,6 +18,26 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async localLogin(email: string, password: string): Promise<UserEntity> {
+    const user: UserEntity = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    if (user.isDeleted) {
+      throw new Error('User is deleted');
+    }
+
+    if (user.isBanned) {
+      throw new Error('User is banned');
+    }
+
+    return user;
+  }
+
   async googleLogin(googleUser: GoogleUser): Promise<UserEntity> {
     const { provider, providerId, email, name, photoUrl } = googleUser;
 
@@ -66,5 +86,7 @@ export class AuthService {
 
     user.verificationToken = refreshToken;
 
+    await this.userRepository.save(user);
+    return;
   }
 }
