@@ -4,7 +4,8 @@ import { Injectable } from '@nestjs/common';
 export class BoardService {
 
   getAllBoards() {
-  
+    
+    return 'getAllBoards';
   }
 
 }
