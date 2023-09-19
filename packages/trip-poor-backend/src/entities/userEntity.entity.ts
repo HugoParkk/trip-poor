@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity } from '../utils/base.entity';
-import { IsNumber, IsEmail, IsString, IsBoolean } from 'class-validator';
+import { IsNumber, IsEmail, IsString, IsBoolean, IsEnum } from 'class-validator';
+import { UserProvider } from 'src/utils/enum/userProvider.enum';
 
 @Entity('User')
 export class UserEntity extends BaseEntity {
@@ -17,8 +18,8 @@ export class UserEntity extends BaseEntity {
   name: string;
 
   @Column()
-  @IsString()
-  provider: string;
+  @IsEnum(UserProvider)
+  provider: UserProvider;
 
   @PrimaryColumn()
   @Column()
