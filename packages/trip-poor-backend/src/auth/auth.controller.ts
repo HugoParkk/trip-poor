@@ -9,7 +9,9 @@ import { LocalUserReq } from './interfaces/LocalUserReq';
 import { RSACrypto } from 'src/utils/rsaCrypto';
 import { LoginDto } from './interfaces/LoginDto';
 import { ResgisterDto } from './interfaces/RegisterDto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags ('인증 API')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -17,6 +19,8 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @ApiBody({ type: String, description: '암호화 된 계정 정보', required: true, examples: { Body: { value: {'value': "asdfasdfsadfadf"} } } })
+  @ApiResponse({ status: 200, description: '성공', type: UserEntity})
   // @UseGuards(AuthGuard('local'))
   async login(@Req() req: Request, @Body('value') value: string): Promise<UserEntity> {
     this.logger.debug('login');
