@@ -18,12 +18,14 @@ function Login() {
         </div>
         <div style={{ flexDirection: "column" }}>
           <span style={{marginRight: "280px" , color:"#042228", fontWeight: 700, fontSize: "22px"}}>로그인</span>
-          <div>
-            <input style={{width: "340px", height:"40px", borderRadius:"8px", background: "#FFF", border: "1px solid #CFD7DC", margin:"36px 0 12px 0"}} />
+          <div style={{position:"relative"}}>
+            <span style={{position:"absolute", top: "12px", right:"280px", background:"#FFF", width:"60px"}}>이메일</span>
+            <input type="text" style={{width: "340px", height:"40px",paddingLeft: "10px", borderRadius:"8px", background: "#FFF", border: "1px solid #CFD7DC", margin:"24px 0 12px 0"}} />
           </div>
-          <div>
-            <input style={{width: "340px", height:"40px", borderRadius:"8px", background: "#FFF", border: "1px solid #CFD7DC",margin:"0px 0 12px 0"}} />
-          </div>
+          <div style={{position:"relative"}}>
+          <span style={{position:"absolute", top: "-10px", right:"260px", background:"#FFF", width:"80px"}}>비밀번호</span>
+            <input type="text" style={{width: "340px", height:"40px", paddingLeft: "10px", borderRadius:"8px", background: "#FFF", border: "1px solid #CFD7DC",margin:"0px 0 12px 0"}} />
+          </div> 
 
           <span style={{marginLeft: "240px"}}>비밀번호 찾기</span>
           <div style={{margin:"36px 0px 12px 0px"}}>
