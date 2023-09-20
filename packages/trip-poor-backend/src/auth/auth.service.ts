@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RSACrypto } from 'src/utils/rsaCrypto';
 import { UserProvider } from 'src/utils/enum/userProvider.enum';
 import { ResgisterDto } from './interfaces/RegisterDto';
+import { LoginDto } from './interfaces/LoginDto';
 
 @Injectable()
 export class AuthService {
@@ -77,6 +78,21 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  async findByProviderIdAndRefreshToken(
+    providerId: string,
+    refreshToken: string,
+  ): Promise<UserEntity> {
+    const user: UserEntity = await this.userRepository.findOne({
+      where: { providerId: providerId, verificationToken: refreshToken },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user;
+  }
+
   async updateHashedRefreshToken(providerId: string, refreshToken: string) {
     const user: UserEntity = await this.userRepository.findOne({
       where: { providerId },
@@ -92,9 +108,21 @@ export class AuthService {
     return;
   }
 
-  async validateUser(email: string, password: string): Promise<UserEntity> {
+  async validateUser(value: string): Promise<UserEntity> {
+    const privateKey: string = process.env.RSA_PRIVATE_KEY;
+    const decryptedValue: string = RSACrypto.decrypt(value, privateKey);
+    const loginDto: LoginDto = JSON.parse(decryptedValue);
+
+    this.logger.debug(JSON.stringify(loginDto));
+
+    if (loginDto) {
+      if (loginDto.email == null || loginDto.password == null) {
+        throw new BadRequestException('email or password not found');
+      }
+    }
+
     const user: UserEntity = await this.userRepository.findOne({
-      where: { email: email },
+      where: { email: loginDto.email },
     });
 
     if (!user) {
@@ -109,7 +137,7 @@ export class AuthService {
       throw new BadRequestException('User is banned');
     }
 
-    const passwordMatch: boolean = RSACrypto.match(password, user.password, process.env.RSA_PRIVATE_KEY);
+    const passwordMatch: boolean = RSACrypto.match(loginDto.password, user.password, process.env.RSA_PRIVATE_KEY);
     this.logger.debug(JSON.stringify(passwordMatch));
 
     if (!passwordMatch) {

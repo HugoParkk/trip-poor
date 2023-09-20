@@ -23,7 +23,7 @@ export class AuthController {
   @ApiResponse({ status: 200, description: '성공', type: UserEntity})
   @Post('login')
   // @UseGuards(AuthGuard('local'))
-  async login(@Req() req: Request, @Body('value') value: string): Promise<UserEntity> {
+  async login(@Req() req: Request, @Res() res: Response, @Body('value') value: string): Promise<void> {
     this.logger.debug('login');
     this.logger.debug(value);
 
@@ -31,22 +31,27 @@ export class AuthController {
       throw new BadRequestException('body value not found');
     }
 
-    const privateKey: string = process.env.RSA_PRIVATE_KEY;
-    const decryptedValue: string = RSACrypto.decrypt(value, privateKey);
-    const loginDto: LoginDto = JSON.parse(decryptedValue);
+    const user: UserEntity = await this.authService.validateUser(value);
 
-    this.logger.debug(JSON.stringify(loginDto));
+    // JWT Login Start
+    const payload: JwtPayload = { sub: user.providerId, email: user.email };
 
-    if (loginDto) {
-      if (loginDto.email == null || loginDto.password == null) {
-        throw new BadRequestException('email or password not found');
-      }
-    }
+    const { accessToken, refreshToken } = await this.authService.getToken(payload);
 
-    const user: UserEntity = await this.authService.validateUser(loginDto.email, loginDto.password);
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
+
+    await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
+
+    this.logger.debug(`access-token: ${accessToken}`);
+    this.logger.debug(`refresh-token: ${refreshToken}`);
+    
+    
     this.logger.debug(JSON.stringify(user));
+    // JWT Login End
 
-    return user as UserEntity;
+    // return user as UserEntity;
+    res.redirect(process.env.DOMAIN);
   }
 
   @ApiOperation({ summary: '회원가입', description: 'local 회원가입' })
@@ -92,15 +97,35 @@ export class AuthController {
 
     const { accessToken, refreshToken } = await this.authService.getToken(payload);
 
-    res.cookie('accessToken', accessToken);
-    res.cookie('refreshToken', refreshToken);
+    res.cookie('access-token', accessToken);
+    res.cookie('refresh-token', refreshToken);
 
     await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
 
-    this.logger.debug(`accessToken: ${accessToken}`);
-    this.logger.debug(`refreshToken: ${refreshToken}`);
+    this.logger.debug(`access-token: ${accessToken}`);
+    this.logger.debug(`refresh-token: ${refreshToken}`);
+    
     res.redirect(process.env.DOMAIN);
-    // const jwt: UserEntity = await this.authService.googleLogin(user);
+
     // res.redirect(`http://localhost:3000/login/success?token=${jwt}`);
+  }
+
+  @Post('refresh')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  async refreshToken(@Req() req: Request, @Res() res: Response): Promise<void> {
+    const { refreshToken, sub, email } = req.user as JwtPayload & {
+      refreshToken: string;
+    };
+
+    const user = await this.authService.findByProviderIdAndRefreshToken(sub, refreshToken);
+
+    const token = await this.authService.getToken({ sub, email });
+
+    res.cookie('access-token', token.accessToken);
+    res.cookie('refresh-token', token.refreshToken);
+
+    await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
+
+    res.redirect(process.env.DOMAIN);
   }
 }
