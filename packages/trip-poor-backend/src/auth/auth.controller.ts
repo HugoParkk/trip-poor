@@ -9,7 +9,7 @@ import { LocalUserReq } from './interfaces/LocalUserReq';
 import { RSACrypto } from 'src/utils/rsaCrypto';
 import { LoginDto } from './interfaces/LoginDto';
 import { ResgisterDto } from './interfaces/RegisterDto';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiResponseProperty, ApiTags } from '@nestjs/swagger';
 
 @ApiTags ('인증 API')
 @Controller('auth')
@@ -18,9 +18,10 @@ export class AuthController {
 
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @ApiOperation({ summary: '로그인', description: 'local 로그인' })
   @ApiBody({ type: String, description: '암호화 된 계정 정보', required: true, examples: { Body: { value: {'value': "asdfasdfsadfadf"} } } })
   @ApiResponse({ status: 200, description: '성공', type: UserEntity})
+  @Post('login')
   // @UseGuards(AuthGuard('local'))
   async login(@Req() req: Request, @Body('value') value: string): Promise<UserEntity> {
     this.logger.debug('login');
@@ -48,6 +49,8 @@ export class AuthController {
     return user as UserEntity;
   }
 
+  @ApiOperation({ summary: '회원가입', description: 'local 회원가입' })
+  @ApiBody({ type: String, description: '암호화 된 계정 정보 example => 암호화 이전 JSON {email: "email",password: "encrypedPassword",name: "username"}', required: true, examples: { Body: { value: {'value': "asdfasdfsadfadf"} } } })
   @Post('register')
   async register(@Req() req: Request, @Res() res: Response, @Body('value') value: string): Promise<Response<UserEntity>> {
     this.logger.debug('register');
@@ -68,12 +71,14 @@ export class AuthController {
     }
   }
 
+  @ApiOperation({ summary: '구글 로그인', description: 'Google OAuth callback To /google/callback'})
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(): Promise<void> {
     this.logger.debug('googleAuth');
   }
 
+  @ApiOperation({ summary: '구글 로그인 callback', description: 'Google OAuth callback From /google'})
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthCallback(
