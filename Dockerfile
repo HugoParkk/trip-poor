@@ -27,6 +27,6 @@ RUN npm install -g yarn
 RUN yarn install --production
 RUN rm package*.json
 
-EXPOSE 3000
+EXPOSE 3002
 
 CMD ["yarn", "start:prod"]
