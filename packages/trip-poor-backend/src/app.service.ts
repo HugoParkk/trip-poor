@@ -8,10 +8,12 @@ export class AppService {
   getHello(): { [key: string]: string | number } {
     const port = this.configService.get<number>('PORT', 0);
     const env = this.configService.get<string>('NODE_ENV', '');
-    return {
+    const result = {
       port: port,
       env: env,
     };
+    
+    return result;
   }
 
   getHealth(): { [key: string]: string } {

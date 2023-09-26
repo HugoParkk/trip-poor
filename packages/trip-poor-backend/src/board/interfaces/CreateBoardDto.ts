@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BoardStatus } from 'src/utils/enum/boardStatus.enum';
+import { BoardStatus } from '../../utils/enum/boardStatus';
 
 export class CreateBoardDto {
   @ApiProperty({ description: '게시글 작성자 고유 번호', default: 1 })

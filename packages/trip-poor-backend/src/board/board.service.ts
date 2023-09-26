@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardEntity } from '../entities/boardEntity.entity';
 import { Repository } from 'typeorm';
-import { BoardStatus } from 'src/utils/enum/boardStatus.enum';
+import { BoardStatus } from 'src/utils/enum/boardStatus';
 
 @Injectable()
 export class BoardService {

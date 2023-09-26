@@ -1,6 +1,6 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { BaseEntity } from '../utils/base.entity';
-import { BoardStatus } from '../utils/enum/boardStatus.enum';
+import { BoardStatus } from '../utils/enum/boardStatus';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 

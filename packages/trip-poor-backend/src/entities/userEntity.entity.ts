@@ -7,7 +7,7 @@ import {
   IsBoolean,
   IsEnum,
 } from 'class-validator';
-import { UserProvider } from 'src/utils/enum/userProvider.enum';
+import { UserProvider } from '../utils/enum/userProvider';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity('User')

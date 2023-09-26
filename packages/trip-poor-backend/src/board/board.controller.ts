@@ -14,7 +14,7 @@ import { BoardService } from './board.service';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateBoardDto } from './interfaces/CreateBoardDto';
 import { AuthGuard } from '@nestjs/passport';
-import { BoardEntity } from 'src/entities/boardEntity.entity';
+import { BoardEntity } from '../entities/boardEntity.entity';
 
 @ApiTags('게시판 API')
 @Controller('board')

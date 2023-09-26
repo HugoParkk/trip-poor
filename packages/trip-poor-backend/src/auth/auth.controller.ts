@@ -16,7 +16,7 @@ import { UserEntity } from '../entities/userEntity.entity';
 import { GoogleUser } from './interfaces/GoogleUser';
 import { JwtPayload } from './interfaces/JwtPayload';
 import { LocalUserReq } from './interfaces/LocalUserReq';
-import { RSACrypto } from 'src/utils/rsaCrypto';
+import { RSACrypto } from '../utils/rsaCrypto';
 import { ResgisterDto } from './interfaces/RegisterDto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 

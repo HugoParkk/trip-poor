@@ -5,8 +5,8 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/userEntity.entity';
 import { JwtPayload } from './interfaces/JwtPayload';
 import { JwtService } from '@nestjs/jwt';
-import { RSACrypto } from 'src/utils/rsaCrypto';
-import { UserProvider } from 'src/utils/enum/userProvider.enum';
+import { RSACrypto } from '../utils/rsaCrypto';
+import { UserProvider } from '../utils/enum/userProvider';
 import { ResgisterDto } from './interfaces/RegisterDto';
 import { LoginDto } from './interfaces/LoginDto';
 
