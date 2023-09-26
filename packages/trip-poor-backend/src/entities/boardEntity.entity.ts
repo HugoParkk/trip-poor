@@ -1,10 +1,11 @@
 import { IsEnum, IsNumber, IsString } from "class-validator";
-import { BaseEntity } from "src/utils/base.entity";
-import { BoardStatus } from "src/utils/enum/boardStatus.enum";
+import { BaseEntity } from "../utils/base.entity";
+import { BoardStatus } from "../utils/enum/boardStatus.enum";
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Board')
 export class BoardEntity extends BaseEntity {
+  
   @PrimaryGeneratedColumn()
   @IsNumber()
   id: number;
@@ -17,7 +18,7 @@ export class BoardEntity extends BaseEntity {
   @IsString()
   title: string;
 
-  @Column()
+  @Column({ default: '' })
   @IsString()
   description: string;
 
@@ -25,7 +26,7 @@ export class BoardEntity extends BaseEntity {
   @IsString()
   content: string;
 
-  @Column()
+  @Column({ default: ''})
   @IsString()
   tags: string;
 

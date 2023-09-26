@@ -16,17 +16,13 @@ export class BoardController {
   @ApiResponse({ status: 200, description: '성공' })
   @Get()
   async getAllBoards(@Req() req: Request, @Res() res: Response) {
-    return await this.boardService.getAllBoards();
+    return res.json(await this.boardService.getAllBoards());
   }
 
   @ApiOperation({ summary: '게시판 생성', description: '게시판을 생성합니다.' })
   @Post()
   @UseGuards(AuthGuard('jwt'))
   async createBoard(@Req() req: Request, @Res() res: Response, @Body() body: CreateBoardDto) {
-    // return await this.boardService.createBoard(body);
-    const { sub, email } = req.user;
-    
-    this.logger.debug('createBoard');
-    return res.send({ sub, email });
+    return res.json(await this.boardService.createBoard(body));
   }
 }

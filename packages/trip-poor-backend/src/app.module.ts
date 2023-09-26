@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { BoardModule } from './board/board.module';
+import { BoardEntity } from './entities/boardEntity.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { BoardModule } from './board/board.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [UserEntity],
+      entities: [UserEntity, BoardEntity],
       synchronize: true,
       timezone: process.env.TZ,
     }),
