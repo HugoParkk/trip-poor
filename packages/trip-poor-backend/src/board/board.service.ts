@@ -19,6 +19,14 @@ export class BoardService {
     return boards;
   }
 
+  async getBoard(id: number): Promise<BoardEntity> {
+    this.logger.debug('getBoard');
+    const board: BoardEntity = await this.boardRepository.findOne({
+      where: { id: id },
+    });
+    return board;
+  }
+
   async createBoard(body: any): Promise<BoardEntity> {
     this.logger.debug('createBoard');
     const newBoard: BoardEntity = new BoardEntity();
@@ -29,7 +37,7 @@ export class BoardService {
     newBoard.tags = JSON.stringify(body.tags);
     newBoard.status = body.status;
     this.logger.debug(JSON.stringify(newBoard));
-    
+
     return await this.boardRepository.save(newBoard);
   }
 }
