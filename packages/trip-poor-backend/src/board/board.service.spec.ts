@@ -18,7 +18,7 @@ describe('BoardService', () => {
             save: jest.fn(),
             delete: jest.fn(),
           },
-        }
+        },
       ],
     }).compile();
 

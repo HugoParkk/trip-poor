@@ -41,7 +41,7 @@ describe('AuthService', () => {
             save: jest.fn(),
             delete: jest.fn(),
           },
-        }
+        },
       ],
     }).compile();
 

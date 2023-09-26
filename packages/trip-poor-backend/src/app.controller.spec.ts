@@ -8,10 +8,12 @@ describe('AppController', () => {
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
-      imports:[ConfigModule.forRoot({
-        isGlobal: true,
-        envFilePath: `./config/env/.${process.env.NODE_ENV}.env`,
-      })],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          envFilePath: `./config/env/.${process.env.NODE_ENV}.env`,
+        }),
+      ],
       controllers: [AppController],
       providers: [AppService],
     }).compile();
@@ -21,14 +23,14 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return {"port": "PORT, "env": "env"}', () => {
-      const result = {"port": "3003", "env": "test"};
+      const result = { port: '3003', env: 'test' };
       expect(appController.getHello()).toStrictEqual(result);
     });
   });
 
   describe('health', () => {
     it('should return {"status": "ok"}', () => {
-      const result = {"status": "ok"};
+      const result = { status: 'ok' };
       expect(appController.getHealth()).toStrictEqual(result);
     });
   });

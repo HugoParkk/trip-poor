@@ -12,7 +12,7 @@ export class AppService {
       port: port,
       env: env,
     };
-    
+
     return result;
   }
 
