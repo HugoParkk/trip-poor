@@ -12,6 +12,6 @@ module.exports = {
   },
   collectCoverage: true,
 
-  coverageDirectory: "../coverage",
+  coverageDirectory: "./backend-coverage",
   testEnvironment: "node"
 };
