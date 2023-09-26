@@ -21,26 +21,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async localLogin(email: string, password: string): Promise<UserEntity> {
-    const user: UserEntity = await this.userRepository.findOne({
-      where: { email },
-    });
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-
-    if (user.isDeleted) {
-      throw new Error('User is deleted');
-    }
-
-    if (user.isBanned) {
-      throw new Error('User is banned');
-    }
-
-    return user;
-  }
-
   async googleLogin(googleUser: GoogleUser): Promise<UserEntity> {
     const { provider, providerId, email, name, photoUrl } = googleUser;
 
@@ -71,7 +51,7 @@ export class AuthService {
     });
 
     const refreshToken = this.jwtService.sign(payload, {
-      secret: process.env.JWT_REFRESH_SECRET, 
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
     });
 
@@ -137,7 +117,11 @@ export class AuthService {
       throw new BadRequestException('User is banned');
     }
 
-    const passwordMatch: boolean = RSACrypto.match(loginDto.password, user.password, process.env.RSA_PRIVATE_KEY);
+    const passwordMatch: boolean = RSACrypto.match(
+      loginDto.password,
+      user.password,
+      process.env.RSA_PRIVATE_KEY,
+    );
     this.logger.debug(JSON.stringify(passwordMatch));
 
     if (!passwordMatch) {
@@ -160,9 +144,12 @@ export class AuthService {
     newUser.provider = UserProvider.LOCAL;
     newUser.providerId = value.email;
     newUser.email = value.email;
-    newUser.password = RSACrypto.encrypt(value.password, process.env.RSA_PRIVATE_KEY);
+    newUser.password = RSACrypto.encrypt(
+      value.password,
+      process.env.RSA_PRIVATE_KEY,
+    );
     newUser.name = value.name;
-    newUser.avatar = "";
+    newUser.avatar = '';
 
     this.logger.debug(JSON.stringify(newUser));
 

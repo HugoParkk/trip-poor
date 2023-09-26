@@ -1,4 +1,3 @@
-import { log } from 'console';
 import * as crypto from 'crypto';
 
 export class RSACrypto {
@@ -24,7 +23,11 @@ export class RSACrypto {
     return decryptedValue.toString('utf8');
   }
 
-  public static match(value: string, encryptedValue: string, privateKey: string): boolean {
+  public static match(
+    value: string,
+    encryptedValue: string,
+    privateKey: string,
+  ): boolean {
     return value === RSACrypto.decrypt(encryptedValue, privateKey);
   }
 }

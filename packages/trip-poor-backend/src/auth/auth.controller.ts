@@ -1,4 +1,14 @@
-import { Controller, Logger, Get, UseGuards, Req, Res, Post, Body, NotFoundException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Logger,
+  Get,
+  UseGuards,
+  Req,
+  Res,
+  Post,
+  Body,
+  BadRequestException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { Request, Response } from 'express';
@@ -7,11 +17,10 @@ import { GoogleUser } from './interfaces/GoogleUser';
 import { JwtPayload } from './interfaces/JwtPayload';
 import { LocalUserReq } from './interfaces/LocalUserReq';
 import { RSACrypto } from 'src/utils/rsaCrypto';
-import { LoginDto } from './interfaces/LoginDto';
 import { ResgisterDto } from './interfaces/RegisterDto';
-import { ApiBody, ApiOperation, ApiResponse, ApiResponseProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags ('인증 API')
+@ApiTags('인증 API')
 @Controller('auth')
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
@@ -19,11 +28,19 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @ApiOperation({ summary: '로그인', description: 'local 로그인' })
-  @ApiBody({ type: String, description: '암호화 된 계정 정보', required: true, examples: { Body: { value: {'value': "asdfasdfsadfadf"} } } })
-  @ApiResponse({ status: 200, description: '성공', type: UserEntity})
+  @ApiBody({
+    type: LocalUserReq,
+    description: '암호화 된 계정 정보',
+    required: true,
+  })
+  @ApiResponse({ status: 200, description: '성공', type: UserEntity })
   @Post('login')
   // @UseGuards(AuthGuard('local'))
-  async login(@Req() req: Request, @Res() res: Response, @Body('value') value: string): Promise<void> {
+  async login(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body('value') value: string,
+  ): Promise<void> {
     this.logger.debug('login');
     this.logger.debug(value);
 
@@ -36,17 +53,20 @@ export class AuthController {
     // JWT Login Start
     const payload: JwtPayload = { sub: user.providerId, email: user.email };
 
-    const { accessToken, refreshToken } = await this.authService.getToken(payload);
+    const { accessToken, refreshToken } =
+      await this.authService.getToken(payload);
 
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
-    await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
+    await this.authService.updateHashedRefreshToken(
+      user.providerId,
+      refreshToken,
+    );
 
     this.logger.debug(`access-token: ${accessToken}`);
     this.logger.debug(`refresh-token: ${refreshToken}`);
-    
-    
+
     this.logger.debug(JSON.stringify(user));
     // JWT Login End
 
@@ -55,11 +75,21 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: '회원가입', description: 'local 회원가입' })
-  @ApiBody({ type: String, description: '암호화 된 계정 정보 example => 암호화 이전 JSON {email: "email",password: "encrypedPassword",name: "username"}', required: true, examples: { Body: { value: {'value': "asdfasdfsadfadf"} } } })
+  @ApiBody({
+    type: String,
+    description:
+      '암호화 된 계정 정보 example => 암호화 이전 JSON {email: "email",password: "encrypedPassword",name: "username"}',
+    required: true,
+    examples: { Body: { value: { value: 'asdfasdfsadfadf' } } },
+  })
   @Post('register')
-  async register(@Req() req: Request, @Res() res: Response, @Body('value') value: string): Promise<Response<UserEntity>> {
+  async register(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body('value') value: string,
+  ): Promise<Response<UserEntity>> {
     this.logger.debug('register');
-    
+
     if (!value) {
       throw new BadRequestException('body value not found');
     }
@@ -70,20 +100,26 @@ export class AuthController {
 
     const user: UserEntity = await this.authService.localRegister(registerDto);
 
-    if(user) {
+    if (user) {
       this.logger.debug(user);
       return res.send(user);
     }
   }
 
-  @ApiOperation({ summary: '구글 로그인', description: 'Google OAuth callback To /google/callback'})
+  @ApiOperation({
+    summary: '구글 로그인',
+    description: 'Google OAuth callback To /google/callback',
+  })
   @Get('google')
   @UseGuards(AuthGuard('google'))
   async googleAuth(): Promise<void> {
     this.logger.debug('googleAuth');
   }
 
-  @ApiOperation({ summary: '구글 로그인 callback', description: 'Google OAuth callback From /google'})
+  @ApiOperation({
+    summary: '구글 로그인 callback',
+    description: 'Google OAuth callback From /google',
+  })
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthCallback(
@@ -95,16 +131,20 @@ export class AuthController {
 
     const payload: JwtPayload = { sub: user.providerId, email: user.email };
 
-    const { accessToken, refreshToken } = await this.authService.getToken(payload);
+    const { accessToken, refreshToken } =
+      await this.authService.getToken(payload);
 
     res.cookie('access-token', accessToken);
     res.cookie('refresh-token', refreshToken);
 
-    await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
+    await this.authService.updateHashedRefreshToken(
+      user.providerId,
+      refreshToken,
+    );
 
     this.logger.debug(`access-token: ${accessToken}`);
     this.logger.debug(`refresh-token: ${refreshToken}`);
-    
+
     res.redirect(process.env.DOMAIN);
 
     // res.redirect(`http://localhost:3000/login/success?token=${jwt}`);
@@ -117,14 +157,20 @@ export class AuthController {
       refreshToken: string;
     };
 
-    const user = await this.authService.findByProviderIdAndRefreshToken(sub, refreshToken);
+    const user = await this.authService.findByProviderIdAndRefreshToken(
+      sub,
+      refreshToken,
+    );
 
     const token = await this.authService.getToken({ sub, email });
 
     res.cookie('access-token', token.accessToken);
     res.cookie('refresh-token', token.refreshToken);
 
-    await this.authService.updateHashedRefreshToken(user.providerId, refreshToken);
+    await this.authService.updateHashedRefreshToken(
+      user.providerId,
+      refreshToken,
+    );
 
     res.redirect(process.env.DOMAIN);
   }

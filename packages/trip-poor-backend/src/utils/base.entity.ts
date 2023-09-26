@@ -1,4 +1,4 @@
-import { Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { UpdateDateColumn, CreateDateColumn } from 'typeorm';
 import { IsDate } from 'class-validator';
 
 export abstract class BaseEntity {

@@ -11,7 +11,12 @@ import { RefreshJwtStrategy } from './strategies/refreshJwt.strategy';
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity]), JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, GoogleOauthStrategy, AccessJwtStrategy, RefreshJwtStrategy],
-  exports: [AccessJwtStrategy, RefreshJwtStrategy]
+  providers: [
+    AuthService,
+    GoogleOauthStrategy,
+    AccessJwtStrategy,
+    RefreshJwtStrategy,
+  ],
+  exports: [AccessJwtStrategy, RefreshJwtStrategy],
 })
 export class AuthModule {}

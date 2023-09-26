@@ -1,4 +1,4 @@
-import { UserProvider } from "src/utils/enum/userProvider.enum";
+import { UserProvider } from 'src/utils/enum/userProvider.enum';
 
 export interface GoogleUser {
   provider: UserProvider;
