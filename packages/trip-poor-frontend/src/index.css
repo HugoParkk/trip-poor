@@ -1,4 +1,7 @@
-body {
+* {
   margin: 0;
+}
+body {
   font-family: "Spoqa Han Sans Neo", "Roboto";
+  color: #042228;
 }
