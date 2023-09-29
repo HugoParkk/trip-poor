@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1695901375026" clover="3.2.0">
-  <project timestamp="1695901375027" name="All files">
-    <metrics statements="289" coveredstatements="153" conditionals="22" coveredconditionals="6" methods="42" coveredmethods="14" elements="353" coveredelements="173" complexity="0" loc="289" ncloc="289" packages="9" files="19" classes="19"/>
+<coverage generated="1695989006500" clover="3.2.0">
+  <project timestamp="1695989006500" name="All files">
+    <metrics statements="301" coveredstatements="156" conditionals="22" coveredconditionals="6" methods="44" coveredmethods="15" elements="367" coveredelements="177" complexity="0" loc="301" ncloc="301" packages="9" files="19" classes="19"/>
     <package name="src">
       <metrics statements="17" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
       <file name="app.controller.ts" path="/Users/jongyeonpark/Documents/trip-poor/packages/trip-poor-backend/src/app.controller.ts">
@@ -207,7 +207,7 @@
       </file>
     </package>
     <package name="src.board">
-      <metrics statements="51" coveredstatements="30" conditionals="1" coveredconditionals="0" methods="9" coveredmethods="3"/>
+      <metrics statements="63" coveredstatements="33" conditionals="1" coveredconditionals="0" methods="11" coveredmethods="4"/>
       <file name="board.controller.ts" path="/Users/jongyeonpark/Documents/trip-poor/packages/trip-poor-backend/src/board/board.controller.ts">
         <metrics statements="15" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="1"/>
         <line num="1" count="1" type="stmt"/>
@@ -227,16 +227,16 @@
         <line num="64" count="0" type="stmt"/>
       </file>
       <file name="board.service.ts" path="/Users/jongyeonpark/Documents/trip-poor/packages/trip-poor-backend/src/board/board.service.ts">
-        <metrics statements="36" coveredstatements="18" conditionals="1" coveredconditionals="0" methods="5" coveredmethods="2"/>
+        <metrics statements="48" coveredstatements="21" conditionals="1" coveredconditionals="0" methods="7" coveredmethods="3"/>
         <line num="1" count="2" type="stmt"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
         <line num="6" count="2" type="stmt"/>
         <line num="11" count="2" type="stmt"/>
-        <line num="12" count="5" type="stmt"/>
-        <line num="16" count="5" type="stmt"/>
-        <line num="19" count="5" type="stmt"/>
+        <line num="12" count="7" type="stmt"/>
+        <line num="16" count="7" type="stmt"/>
+        <line num="19" count="7" type="stmt"/>
         <line num="23" count="0" type="stmt"/>
         <line num="24" count="0" type="stmt"/>
         <line num="25" count="0" type="stmt"/>
@@ -253,17 +253,29 @@
         <line num="44" count="0" type="stmt"/>
         <line num="45" count="0" type="stmt"/>
         <line num="47" count="0" type="stmt"/>
-        <line num="55" count="1" type="stmt"/>
-        <line num="57" count="1" type="stmt"/>
-        <line num="61" count="1" type="cond" truecount="0" falsecount="1"/>
-        <line num="62" count="0" type="stmt"/>
-        <line num="63" count="0" type="stmt"/>
+        <line num="51" count="0" type="stmt"/>
+        <line num="52" count="0" type="stmt"/>
+        <line num="53" count="0" type="stmt"/>
+        <line num="54" count="0" type="stmt"/>
+        <line num="55" count="0" type="stmt"/>
+        <line num="56" count="0" type="stmt"/>
+        <line num="57" count="0" type="stmt"/>
+        <line num="58" count="0" type="stmt"/>
+        <line num="60" count="0" type="stmt"/>
+        <line num="64" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
         <line num="66" count="1" type="stmt"/>
-        <line num="67" count="1" type="stmt"/>
-        <line num="68" count="1" type="stmt"/>
-        <line num="69" count="1" type="stmt"/>
-        <line num="71" count="1" type="stmt"/>
-        <line num="72" count="1" type="stmt"/>
+        <line num="74" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
+        <line num="80" count="1" type="cond" truecount="0" falsecount="1"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="85" count="1" type="stmt"/>
+        <line num="86" count="1" type="stmt"/>
+        <line num="87" count="1" type="stmt"/>
+        <line num="88" count="1" type="stmt"/>
+        <line num="90" count="1" type="stmt"/>
+        <line num="91" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.board.interfaces">

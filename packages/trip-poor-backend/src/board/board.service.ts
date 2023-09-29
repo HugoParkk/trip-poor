@@ -47,6 +47,25 @@ export class BoardService {
     return await this.boardRepository.save(newBoard);
   }
 
+  async updateBoard(id: number, authorId: number, body: any): Promise<BoardEntity> {
+    this.logger.debug('updateBoard');
+    const board = await this.boardRepository.findOne({ where: { id: id, authorId: authorId } });
+    board.title = body.title;
+    board.description = body.description;
+    board.content = body.content;
+    board.tags = JSON.stringify(body.tags);
+    board.status = body.status as BoardStatus;
+    this.logger.debug(JSON.stringify(board));
+
+    return await this.boardRepository.save(board);
+  }
+
+  async deleteBoard(id: number, authorId: number): Promise<ApiResponse> {
+    this.logger.debug('deleteBoard');
+    const board = await this.boardRepository.delete({ id: id, authorId: authorId });
+    return {code: 200, message: 'delete board success'} as ApiResponse;
+  }
+
   async updateEmotion(
     boardId: number,
     userId: number,
