@@ -111,8 +111,22 @@ describe('BoardService', () => {
     expect(await service.createBoard(mockBoards[0])).toEqual(mockBoards[0]);
   });
 
+  it('should update a board', async () => {
+    jest.spyOn(service, 'updateBoard').mockResolvedValue(mockBoards[0]);
+
+    expect(await service.updateBoard(mockBoards[0].id, mockBoards[0].authorId, mockBoards[0])).toEqual(mockBoards[0]);
+  });
+
+  it('should delete a board', async () => {
+    jest.spyOn(service, 'deleteBoard');
+
+    const result = {code: 200, message: 'delete board success'};
+
+    expect(await service.deleteBoard(mockBoards[0].id, mockBoards[0].authorId)).toEqual(result);
+  });
+
   it('should add emotion to a board', async () => {
-    const spy = jest.spyOn(service, 'updateEmotion');
+    jest.spyOn(service, 'updateEmotion');
 
     const result = {code: 200, message: 'add emotion success'};
 
