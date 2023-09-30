@@ -14,7 +14,7 @@ export const ButtonBase = styled.button`
   ${({ theme }) => theme.typo.body.body1}
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px ${({ theme }) => theme.colors.primary1};
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.colors.gray1};
   }
   &:active {
     opacity: 0.7;
@@ -28,4 +28,19 @@ export const ButtonBase = styled.button`
 export const PrimaryButton = styled(ButtonBase)`
   background-color: ${({ theme }) => theme.colors.primary2};
   color: ${({ theme }) => theme.colors.white};
+  &:focus {
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.colors.primary1};
+  }
+`;
+
+export const IconButton = styled(ButtonBase)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  & > svg,
+  & > img {
+    width: 20px;
+    height: 20px;
+  }
 `;
