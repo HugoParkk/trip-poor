@@ -22,6 +22,7 @@ import { BoardEntity } from './entities/boardEntity.entity';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       entities: [UserEntity, BoardEntity],
+      logging: true,
       synchronize: true,
       timezone: process.env.TZ,
     }),
