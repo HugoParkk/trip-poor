@@ -5,13 +5,14 @@ import {
   Logger,
   Param,
   Post,
+  Put,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { BoardService } from './board.service';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateBoardDto } from './interfaces/CreateBoardDto';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardEntity } from '../entities/boardEntity.entity';
@@ -62,5 +63,20 @@ export class BoardController {
     @Body() body: CreateBoardDto,
   ) {
     return res.json(await this.boardService.createBoard(body));
+  }
+
+  @ApiOperation({ summary: '게시판 수정', description: '게시판을 수정합니다.' })
+  @ApiBearerAuth('Authorization')
+  @ApiResponse({ status: 200, description: '성공', type: BoardEntity })
+  @Put(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async updateBoard(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') id: number,
+    @Body() body: CreateBoardDto,
+  ) {
+    const authorId = req.user.id;
+    return res.json(await this.boardService.updateBoard(id, authorId, body));
   }
 }
