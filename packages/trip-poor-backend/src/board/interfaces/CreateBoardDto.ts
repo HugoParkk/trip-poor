@@ -11,5 +11,5 @@ export class CreateBoardDto {
   @ApiProperty({ description: '게시글 태그', default: '["test","testTag"]' })
   tags: string[];
   @ApiProperty({ description: '게시글 상태', default: 'public' })
-  Status: BoardStatus;
+  status: BoardStatus;
 }
