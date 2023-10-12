@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -54,6 +55,7 @@ export class BoardController {
     description: '게시판 생성 정보',
     required: true,
   })
+  @ApiBearerAuth('Authorization')
   @ApiResponse({ status: 200, description: '성공', type: BoardEntity })
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -76,7 +78,22 @@ export class BoardController {
     @Param('id') id: number,
     @Body() body: CreateBoardDto,
   ) {
-    const authorId = req.user.id;
-    return res.json(await this.boardService.updateBoard(id, authorId, body));
+    const authorEmail = req.user.email;
+    return res.json(await this.boardService.updateBoard(id, authorEmail, body));
   }
+
+  @ApiOperation({ summary: '게시판 삭제', description: '게시판을 삭제합니다.' })
+  @ApiBearerAuth('Authorization')
+  @ApiResponse({ status: 200, description: '성공', type: ApiResponse })
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteBoard(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') id: number
+  ) {
+    const authorEmail = req.user.email;
+    return res.json(await this.boardService.deleteBoard(id, authorEmail));
+  }
+
 }
