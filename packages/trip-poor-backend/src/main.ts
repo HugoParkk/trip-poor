@@ -9,6 +9,10 @@ async function bootstrap() {
     .setTitle('Trip Poor Backend API Document')
     .setDescription('Trip Poor Backend API Document')
     .setVersion('0.1')
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
+      'Authorization',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
