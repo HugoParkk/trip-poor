@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, ValidationPipe } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './entities/userEntity.entity';
 import { AppController } from './app.controller';
@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { BoardModule } from './board/board.module';
 import { BoardEntity } from './entities/boardEntity.entity';
+import { EmotionEntity } from './entities/emotionEntity.entity';
+import { APP_PIPE } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -21,7 +23,7 @@ import { BoardEntity } from './entities/boardEntity.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [UserEntity, BoardEntity],
+      entities: [UserEntity, BoardEntity, EmotionEntity],
       logging: true,
       synchronize: true,
       timezone: process.env.TZ,
@@ -30,6 +32,12 @@ import { BoardEntity } from './entities/boardEntity.entity';
     BoardModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_PIPE,
+      useClass: ValidationPipe,
+    }
+  ],
 })
 export class AppModule {}
