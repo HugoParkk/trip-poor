@@ -64,7 +64,8 @@ export class BoardController {
     @Res() res: Response,
     @Body() body: CreateBoardDto,
   ) {
-    return res.json(await this.boardService.createBoard(body));
+    const authorEmail = req.user.email;
+    return res.json(await this.boardService.createBoard(authorEmail, body));
   }
 
   @ApiOperation({ summary: '게시판 수정', description: '게시판을 수정합니다.' })
