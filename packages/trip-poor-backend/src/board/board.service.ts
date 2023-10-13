@@ -37,10 +37,12 @@ export class BoardService {
     return board;
   }
 
-  async createBoard(body: any): Promise<BoardEntity> {
+  async createBoard(authorEmail: string, body: any): Promise<BoardEntity> {
     this.logger.debug('createBoard');
+
+    const authorId: number = (await this.userRepository.findOne({ where: { email: authorEmail } })).id;
     const newBoard: BoardEntity = new BoardEntity();
-    newBoard.authorId = body.authorId;
+    newBoard.authorId = authorId;
     newBoard.title = body.title;
     newBoard.description = body.description;
     newBoard.content = body.content;
@@ -76,6 +78,7 @@ export class BoardService {
 
     const authorId: number = (await this.userRepository.findOne({ where: { email: authorEmail } })).id;
     await this.boardRepository.delete({ id: id, authorId: authorId });
+    
     return {code: 200, message: 'delete board success'} as ApiResponse;
   }
 
