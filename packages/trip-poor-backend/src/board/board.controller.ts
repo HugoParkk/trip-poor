@@ -17,6 +17,8 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nes
 import { CreateBoardDto } from './interfaces/CreateBoardDto';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardEntity } from '../entities/boardEntity.entity';
+import { UpdateEmotionDto } from './interfaces/UpdateEmotionDto';
+import { Emotion } from 'src/utils/enum/emotion';
 
 @ApiTags('게시판 API')
 @Controller('board')
@@ -95,6 +97,29 @@ export class BoardController {
   ) {
     const authorEmail = req.user.email;
     return res.json(await this.boardService.deleteBoard(id, authorEmail));
+  }
+
+  @ApiOperation({ summary: '게시물에 반응 추가', description: '게시물에 반응을 추가합니다.' })
+  @ApiBearerAuth('Authorization')
+  @ApiResponse({ status: 200, description: 'add emotion success', type: ApiResponse })
+  @Put(':id/emotion')
+  @UseGuards(AuthGuard('jwt'))
+  async updateEmotion(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('id') boardId: number,
+    @Body() body: UpdateEmotionDto,
+  ) {
+    const userEmail = req.user.email;
+    const emotion: Emotion = body.emotion;
+    this.logger.debug(body);
+    this.logger.debug(emotion);
+
+    if (emotion == null) {
+      return res.json({ code: 400, message: 'emotion is not valid' });
+    }
+
+    return res.json(await this.boardService.updateEmotion(boardId, userEmail, emotion));
   }
 
 }
