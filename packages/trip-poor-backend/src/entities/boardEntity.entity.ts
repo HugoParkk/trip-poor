@@ -1,8 +1,9 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { BaseEntity } from '../utils/base.entity';
 import { BoardStatus } from '../utils/enum/boardStatus';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne, ManyToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
+import { EmotionEntity } from './emotionEntity.entity';
 
 @Entity('Board')
 export class BoardEntity extends BaseEntity {
@@ -40,4 +41,9 @@ export class BoardEntity extends BaseEntity {
   @Column()
   @IsEnum(BoardStatus)
   status: BoardStatus;
+
+  // @ApiProperty({ description: '게시글 감정', default: 'public' })
+  @OneToMany(() => EmotionEntity, (emotion) => emotion.board, {})
+  @JoinColumn({ name: 'id', referencedColumnName: 'boardId' })
+  emotions: EmotionEntity[];
 }
