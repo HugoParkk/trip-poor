@@ -81,6 +81,7 @@ export class BoardService {
     board.content = body.content;
     board.tags = JSON.stringify(body.tags);
     board.status = body.status as BoardStatus;
+    
     this.logger.debug(JSON.stringify(board));
 
     return await this.boardRepository.save(board);
