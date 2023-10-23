@@ -9,6 +9,7 @@ import { BoardModule } from './board/board.module';
 import { BoardEntity } from './entities/boardEntity.entity';
 import { EmotionEntity } from './entities/emotionEntity.entity';
 import { APP_PIPE } from '@nestjs/core';
+import { CommentEntity } from './entities/commentEntity.entity';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { APP_PIPE } from '@nestjs/core';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [UserEntity, BoardEntity, EmotionEntity],
+      entities: [UserEntity, BoardEntity, EmotionEntity, CommentEntity],
       logging: true,
       synchronize: true,
       timezone: process.env.TZ,

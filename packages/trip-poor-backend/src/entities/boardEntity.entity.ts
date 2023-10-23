@@ -4,6 +4,7 @@ import { BoardStatus } from '../utils/enum/boardStatus';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne, ManyToMany } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { EmotionEntity } from './emotionEntity.entity';
+import { CommentEntity } from './commentEntity.entity';
 
 @Entity('Board')
 export class BoardEntity extends BaseEntity {
@@ -46,4 +47,8 @@ export class BoardEntity extends BaseEntity {
   @OneToMany(() => EmotionEntity, (emotion) => emotion.board, {})
   @JoinColumn({ name: 'id', referencedColumnName: 'boardId' })
   emotions: EmotionEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.board, {})
+  @JoinColumn({ name: 'id', referencedColumnName: 'boardId' })
+  comments: CommentEntity[];
 }
