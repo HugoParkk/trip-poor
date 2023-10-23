@@ -1,12 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardEntity } from '../entities/boardEntity.entity';
-import { In, Repository } from 'typeorm';
+import { In, Long, Repository } from 'typeorm';
 import { BoardStatus } from '../utils/enum/boardStatus';
 import { EmotionEntity } from '../entities/emotionEntity.entity';
 import { Emotion } from '../utils/enum/emotion';
 import { ApiResponse } from 'src/utils/ApiResponse';
 import { UserEntity } from 'src/entities/userEntity.entity';
+import { async } from 'rxjs';
+import { CommentDto } from './interfaces/CommentDto';
+import { CommentEntity } from 'src/entities/commentEntity.entity';
 
 @Injectable()
 export class BoardService {
@@ -21,6 +24,9 @@ export class BoardService {
 
     @InjectRepository(EmotionEntity)
     private readonly emotionRepository: Repository<EmotionEntity>,
+
+    @InjectRepository(CommentEntity)
+    private readonly commentRepository: Repository<CommentEntity>,
   ) {}
 
   async getAllBoards(): Promise<BoardEntity[]> {
@@ -34,7 +40,7 @@ export class BoardService {
     this.logger.debug('getBoard');
     const board: BoardEntity = await this.boardRepository.findOne({
       where: { id: id },
-      relations: ['emotions'],
+      relations: ['emotions', 'comments'],
     });
     return board;
   }
@@ -125,5 +131,118 @@ export class BoardService {
 
     await this.emotionRepository.save(emotionEntity);
     return { code: 200, message: 'add emotion success' } as ApiResponse;
+  }
+
+  async getComments(boardId: number): Promise<any> {
+    this.logger.debug('getComments');
+
+    const board: BoardEntity = await this.boardRepository.findOne({
+      where: { id: boardId },
+      relations: ['comments'],
+    });
+
+    return board.comments;
+  }
+
+  async addComment(boardId: number, userEmail: string, comment: CommentDto): Promise<CommentEntity> {
+    this.logger.debug('addComment');
+
+    const userId: number = (
+      await this.userRepository.findOne({ where: { email: userEmail } })
+    ).id;
+
+    const board: BoardEntity = await this.boardRepository.findOne({where: {id: boardId}});
+
+    if (board == null) {
+      throw new Error('board not found');
+    }
+
+    const commentsRef = await this.commentRepository.createQueryBuilder()
+    .select('NVL(MAX(ref), 0)')
+    .where('boardId = :boardId', {boardId: boardId})
+    .execute();
+
+    if (comment.parentId == null) { // 부모없는 댓글의 경우
+      const newComment: CommentEntity = new CommentEntity();
+      newComment.content = comment.content;
+      newComment.userId = userId;
+      newComment.boardId = board.id;
+      newComment.ref = commentsRef + 1;
+      newComment.refOrder = 0;
+      newComment.step = 0;
+      newComment.answerNum = 0;
+      newComment.parentId = null;
+  
+      return await this.commentRepository.save(newComment);
+    } else { // 부모있는 댓글(대댓글)의 경우
+      const parentComment: CommentEntity = await this.commentRepository.findOne({where: {id: comment.parentId}});
+      const parentResult = await this.commentRefOrderAndUpdate(parentComment)
+      
+      if (parentResult == null) {
+        throw new Error('부모댓글이 없습니다.');
+      }
+
+      const newComment: CommentEntity = new CommentEntity();
+      newComment.content = comment.content;
+      newComment.userId = userId;
+      newComment.boardId = board.id;
+      newComment.ref = comment.ref;
+      newComment.refOrder = parentResult;
+      newComment.step = comment.step + 1;
+      newComment.answerNum = 0;
+      newComment.parentId = comment.parentId;
+      
+      const savedComment = await this.commentRepository.save(newComment);
+
+      await this.commentRepository.createQueryBuilder()
+      .update()
+      .set({answerNum: parentComment.answerNum + 1})
+      .where('id = :id', {id: comment.parentId})
+      .execute();
+
+      return savedComment;
+    }
+
+
+  }
+
+  private async commentRefOrderAndUpdate(comment: CommentEntity): Promise<number> {
+    const saveStep: number = comment.step + 1;
+    const refOrder = comment.refOrder;
+    const ref = comment.ref;
+    const answerNum = comment.answerNum;
+
+    const answerNumSum: number = await this.commentRepository.createQueryBuilder()
+    .select('SUM(answerNum)')
+    .where('ref = :ref', {ref: ref})
+    .execute();
+    const maxStep: number = await this.commentRepository.createQueryBuilder()
+    .select('MAX(step)')
+    .where('ref = :ref', {ref: ref})
+    .execute();
+
+    if (saveStep < maxStep) {
+      return await answerNumSum + 1;
+    } else if (saveStep == maxStep) {
+      this.commentRepository.createQueryBuilder()
+      .update()
+      .set({refOrder: refOrder + 1})
+      .where('ref = :ref', {ref: ref})
+      .andWhere('refOrder > :refOrder', {refOrder: refOrder + answerNum})
+      .execute();
+
+      return await refOrder + answerNum + 1;
+    } else if (saveStep > maxStep) {
+      this.commentRepository.createQueryBuilder()
+      .update()
+      .set({refOrder: refOrder + 1})
+      .where('ref = :ref', {ref: ref})
+      .andWhere('refOrder > :refOrder', {refOrder: refOrder + answerNum})
+      .execute();
+
+      return await refOrder + 1;
+    }
+
+    return null;
   }
 }

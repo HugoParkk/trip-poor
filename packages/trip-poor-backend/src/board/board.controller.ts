@@ -20,6 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { BoardEntity } from '../entities/boardEntity.entity';
 import { UpdateEmotionDto } from './interfaces/UpdateEmotionDto';
 import { Emotion } from 'src/utils/enum/emotion';
+import { CommentDto } from './interfaces/CommentDto';
 
 @ApiTags('게시판 API')
 @Controller('board')
@@ -132,10 +133,15 @@ export class BoardController {
     @Param('id') boardId: number,
   ) {
     /* TODO: get comment */
-    // return res.json(await this.boardService.getComment(boardId));
+    return res.json(await this.boardService.getComments(boardId));
   }
 
   @ApiOperation({ summary: '게시물에 댓글 추가', description: '게시물에 댓글을 추가합니다.' })
+  @ApiBody({
+    type: CommentDto,
+    description: '댓글 생성 정보',
+    required: true,
+  })
   @ApiBearerAuth('Authorization')
   @ApiResponse({ status: 200, description: 'add comment success', type: ApiResponse })
   @Post(':id/comment')
@@ -144,7 +150,7 @@ export class BoardController {
     @Req() req: Request,
     @Res() res: Response,
     @Param('id') boardId: number,
-    @Body() body: any,
+    @Body() body: CommentDto,
   ) {
     const userEmail = req.user.email;
     const content: string = body.content;
@@ -154,7 +160,7 @@ export class BoardController {
     }
 
     /* TODO: add comment */
-    // return res.json(await this.boardService.addComment(boardId, userEmail, content));
+    return res.json(await this.boardService.addComment(boardId, userEmail, body));
   }
 
   @ApiOperation({ summary: '게시물 댓글 수정', description: '게시물의 댓글을 수정합니다.' })
@@ -194,6 +200,6 @@ export class BoardController {
     const userEmail = req.user.email;
     /* TODO: delete comment */
     // return res.json(await this.boardService.deleteComment(id, userEmail));
-    
+
   }
 }
