@@ -26,7 +26,7 @@ export class EmotionEntity extends BaseEntity {
   @JoinColumn({ name: 'boardId', referencedColumnName: 'id' })
   board: BoardEntity;
 
-  @ApiProperty({ description: '반응', default: Emotion.LIKE })  
+  @ApiProperty({ description: '반응', default: Emotion.LIKE })
   @Column()
   @IsEnum(Emotion)
   emotion: Emotion;
