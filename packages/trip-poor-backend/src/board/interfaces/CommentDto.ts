@@ -10,13 +10,4 @@ export class CommentDto {
   @ApiProperty({ description: '댓글 내용', default: 'testComment' })
   @IsString()
   content: string;
-
-  @ApiProperty({ description: '댓글 참조(그룹) 번호', default: 0 })
-  @IsNumber()
-  ref: number;
-
-  @ApiProperty({ description: '댓글 깊이(계층)', default: 0 })
-  @IsNumber()
-  step: number;
-
 }

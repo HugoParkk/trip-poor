@@ -157,12 +157,12 @@ export class BoardService {
       throw new Error('board not found');
     }
 
-    const commentsRef = await this.commentRepository.createQueryBuilder()
-    .select('NVL(MAX(ref), 0)')
-    .where('boardId = :boardId', {boardId: boardId})
-    .execute();
-
     if (comment.parentId == null) { // 부모없는 댓글의 경우
+      const commentsRef = await this.commentRepository.createQueryBuilder()
+      .select('NVL(MAX(ref), 0) as ref')
+      .where('boardId = :boardId', {boardId: boardId})
+      .getRawOne().then((result) => { return result.ref });
+
       const newComment: CommentEntity = new CommentEntity();
       newComment.content = comment.content;
       newComment.userId = userId;
@@ -186,9 +186,9 @@ export class BoardService {
       newComment.content = comment.content;
       newComment.userId = userId;
       newComment.boardId = board.id;
-      newComment.ref = comment.ref;
+      newComment.ref = parentComment.ref;
       newComment.refOrder = parentResult;
-      newComment.step = comment.step + 1;
+      newComment.step = parentComment.step + 1;
       newComment.answerNum = 0;
       newComment.parentId = comment.parentId;
       
@@ -213,13 +213,13 @@ export class BoardService {
     const answerNum = comment.answerNum;
 
     const answerNumSum: number = await this.commentRepository.createQueryBuilder()
-    .select('SUM(answerNum)')
+    .select('SUM(answerNum) as sum')
     .where('ref = :ref', {ref: ref})
-    .execute();
+    .getRawOne().then((result) => { return result.sum });
     const maxStep: number = await this.commentRepository.createQueryBuilder()
-    .select('MAX(step)')
+    .select('MAX(step) as max')
     .where('ref = :ref', {ref: ref})
-    .execute();
+    .getRawOne().then((result) => { return result.max });
 
     if (saveStep < maxStep) {
       return await answerNumSum + 1;
