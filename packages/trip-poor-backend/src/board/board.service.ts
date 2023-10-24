@@ -31,7 +31,7 @@ export class BoardService {
 
   async getAllBoards(): Promise<BoardEntity[]> {
     this.logger.debug('getAllBoards');
-    const boards: BoardEntity[] = await this.boardRepository.find({relations: ['emotions']});
+    const boards: BoardEntity[] = await this.boardRepository.find({relations: ['emotions', 'comments']});
     this.logger.debug(JSON.stringify(boards));
     return boards;
   }
