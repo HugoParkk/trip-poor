@@ -174,4 +174,17 @@ export class AuthController {
 
     res.redirect(process.env.DOMAIN);
   }
+
+  @ApiOperation({ summary: '로그아웃', description: '로그아웃' })
+  @ApiResponse({ status: 200, description: '성공', type: ApiResponse })
+  @Get('logout')
+  @UseGuards(AuthGuard('jwt'))
+  async logout(@Req() req: Request, @Res() res: Response): Promise<void> {
+    this.logger.debug('logout');
+
+    res.clearCookie('access-token');
+    res.clearCookie('refresh-token');
+
+    res.redirect(process.env.DOMAIN);
+  }
 }
