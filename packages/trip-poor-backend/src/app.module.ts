@@ -10,6 +10,7 @@ import { BoardEntity } from './entities/boardEntity.entity';
 import { EmotionEntity } from './entities/emotionEntity.entity';
 import { APP_PIPE } from '@nestjs/core';
 import { CommentEntity } from './entities/commentEntity.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CommentEntity } from './entities/commentEntity.entity';
     }),
     AuthModule,
     BoardModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
