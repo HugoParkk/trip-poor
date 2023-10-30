@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
@@ -30,5 +30,14 @@ export class UserController {
     // return
   }
 
-  
+  @ApiOperation({ summary: '유저 프로필 삭제', description: '유저 프로필 삭제'})
+  @ApiBearerAuth('Authorization')
+  @ApiResponse({ status: 200, description: '성공' })
+  @Delete()
+  @UseGuards(AuthGuard('jwt'))
+  async deleteUserProfile(@Req() req: Request, @Res() res: Response) {
+
+    // TODO: 유저 프로필 삭제
+    // return
+  }
 }
