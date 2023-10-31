@@ -1,8 +1,10 @@
 import { Controller, Delete, Get, Put, Req, Res, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 
+@ApiTags('유저 프로필 관리 API')
 @Controller('user')
 export class UserController {
 
@@ -14,9 +16,9 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard('jwt'))
   async getUserProfile(@Req() req: Request, @Res() res: Response) {
-
+    const userEmail = req.user.email;
     // TODO: 유저 프로필 조회
-    // return 
+    return res.json(await this.userService.getUserProfile(userEmail));
   }
 
   @ApiOperation({ summary: '유저 프로필 수정', description: '유저 프로필 수정'})
