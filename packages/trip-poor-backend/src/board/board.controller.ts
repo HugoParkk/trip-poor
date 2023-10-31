@@ -68,8 +68,8 @@ export class BoardController {
     @Res() res: Response,
     @Body() body: CreateBoardDto,
   ) {
-    const authorEmail = req.user.email;
-    return res.json(await this.boardService.createBoard(authorEmail, body));
+    const userEmail = req.user.email;
+    return res.json(await this.boardService.createBoard(userEmail, body));
   }
 
   @ApiOperation({ summary: '게시판 수정', description: '게시판을 수정합니다.' })
@@ -83,8 +83,8 @@ export class BoardController {
     @Param('id') id: number,
     @Body() body: CreateBoardDto,
   ) {
-    const authorEmail = req.user.email;
-    return res.json(await this.boardService.updateBoard(id, authorEmail, body));
+    const userEmail = req.user.email;
+    return res.json(await this.boardService.updateBoard(id, userEmail, body));
   }
 
   @ApiOperation({ summary: '게시판 삭제', description: '게시판을 삭제합니다.' })
@@ -97,8 +97,8 @@ export class BoardController {
     @Res() res: Response,
     @Param('id') id: number
   ) {
-    const authorEmail = req.user.email;
-    return res.json(await this.boardService.deleteBoard(id, authorEmail));
+    const userEmail = req.user.email;
+    return res.json(await this.boardService.deleteBoard(id, userEmail));
   }
 
   @ApiOperation({ summary: '게시물에 반응 추가', description: '게시물에 반응을 추가합니다.' })
