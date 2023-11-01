@@ -54,6 +54,11 @@ export class UserEntity extends BaseEntity {
   @IsString()
   avatar: string;
 
+  @ApiProperty({ description: '프로필 설명', default: '테스트 계정입니다.' })
+  @Column({ length: 300, default: '' })
+  @IsString()
+  description: string;
+
   @ApiProperty({ description: '어드민 여부', default: false })
   @Column({ default: false })
   @IsBoolean()
