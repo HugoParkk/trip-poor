@@ -159,7 +159,6 @@ export class BoardController {
       return res.json({ code: 400, message: 'content is not valid' });
     }
 
-    /* TODO: add comment */
     return res.json(await this.boardService.addComment(boardId, userEmail, body));
   }
 
