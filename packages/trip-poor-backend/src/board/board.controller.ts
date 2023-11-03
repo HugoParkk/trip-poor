@@ -198,7 +198,6 @@ export class BoardController {
   ) {
     const userEmail = req.user.email;
     /* TODO: delete comment */
-    // return res.json(await this.boardService.deleteComment(id, userEmail));
-
+    return res.json(await this.boardService.deleteComment(commentId, userEmail));
   }
 }

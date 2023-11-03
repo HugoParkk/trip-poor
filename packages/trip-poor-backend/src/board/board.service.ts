@@ -206,6 +206,23 @@ export class BoardService {
 
   }
 
+  async deleteComment(commentId: number, userEmail: string): Promise<ApiResponse> {
+    this.logger.debug('deleteComment');
+
+    const userId: number = (
+      await this.userRepository.findOne({ where: { email: userEmail } })
+    ).id;
+
+    const comment: CommentEntity = await this.commentRepository.findOne({where: {id: commentId}});
+    if (comment.userId != userId) {
+      return { code: 400, message: 'invalid user' } as ApiResponse;
+    }
+
+    await this.commentRepository.delete({id: commentId});
+
+    return { code: 200, message: 'delete comment success' } as ApiResponse;
+  }
+
   private async commentRefOrderAndUpdate(comment: CommentEntity): Promise<number> {
     const saveStep: number = comment.step + 1;
     const refOrder = comment.refOrder;
