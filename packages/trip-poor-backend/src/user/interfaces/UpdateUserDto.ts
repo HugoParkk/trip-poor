@@ -11,7 +11,7 @@ export class UpdateUserDto {
   @IsOptional()
   name: string;
 
-  @ApiProperty({ description: '유저 아바타', default: 'https://avatars.githubusercontent.com/u/48426991?v=4' })
+  @ApiProperty({ description: '유저 아바타', default: 'https://avatars.githubusercontent.com/u/54205801?v=4' })
   @IsUrl()
   @IsOptional()
   avatar: string;
