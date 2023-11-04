@@ -197,7 +197,6 @@ export class BoardController {
     @Query('commentId') commentId: number,
   ) {
     const userEmail = req.user.email;
-    /* TODO: delete comment */
     return res.json(await this.boardService.deleteComment(commentId, userEmail));
   }
 }
