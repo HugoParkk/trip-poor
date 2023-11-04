@@ -202,8 +202,24 @@ export class BoardService {
 
       return savedComment;
     }
+  }
 
+  async updateComment(userEmail: string, commentId: number, updateComment: CommentDto) {
+    this.logger.debug('updateComment');
 
+    const userId: number = (
+      await this.userRepository.findOne({ where: { email: userEmail } })
+    ).id;
+
+    const comment: CommentEntity = await this.commentRepository.findOne({where: {id: commentId}});
+    if (comment.userId != userId) {
+      return { code: 400, message: 'invalid user' } as ApiResponse;
+    }
+
+    comment.content = updateComment.content;
+    await this.commentRepository.save(comment);
+
+    return { code: 200, message: 'update comment success' } as ApiResponse;
   }
 
   async deleteComment(commentId: number, userEmail: string): Promise<ApiResponse> {

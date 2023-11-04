@@ -170,9 +170,8 @@ export class BoardController {
   async updateComment(
     @Req() req: Request,
     @Res() res: Response,
-    @Param('id') boardId: number,
     @Query('commentId') commentId: number,
-    @Body() body: any
+    @Body() body: CommentDto,
   ) {
     const userEmail = req.user.email;
     const content: string = body.content;
@@ -182,7 +181,7 @@ export class BoardController {
     }
 
     /* TODO: update comment */
-    // return res.json(await this.boardService.updateComment(boardId, userEmail, commentId, content));
+    return res.json(await this.boardService.updateComment(userEmail, commentId, body));
   }
 
   @ApiOperation({ summary: '게시물 댓글 삭제', description: '게시물의 댓글을 삭제합니다.' })
