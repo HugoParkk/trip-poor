@@ -33,7 +33,6 @@ export class UserService {
     user.name = profile.name;
     user.avatar = profile.avatar;
     user.description = profile.description;
-
     await this.userRepository.save(user);
 
     return { code: 200, message: 'update profile success'} as ApiResponse;
