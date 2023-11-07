@@ -132,7 +132,6 @@ export class BoardController {
     @Res() res: Response,
     @Param('id') boardId: number,
   ) {
-    /* TODO: get comment */
     return res.json(await this.boardService.getComments(boardId));
   }
 
