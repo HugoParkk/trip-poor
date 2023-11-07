@@ -1,13 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardEntity } from '../entities/boardEntity.entity';
-import { In, Long, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { BoardStatus } from '../utils/enum/boardStatus';
 import { EmotionEntity } from '../entities/emotionEntity.entity';
 import { Emotion } from '../utils/enum/emotion';
 import { ApiResponse } from 'src/utils/ApiResponse';
 import { UserEntity } from 'src/entities/userEntity.entity';
-import { async } from 'rxjs';
 import { CommentDto } from './interfaces/CommentDto';
 import { CommentEntity } from 'src/entities/commentEntity.entity';
 
@@ -31,7 +30,9 @@ export class BoardService {
 
   async getAllBoards(): Promise<BoardEntity[]> {
     this.logger.debug('getAllBoards');
-    const boards: BoardEntity[] = await this.boardRepository.find({relations: ['emotions', 'comments']});
+    const boards: BoardEntity[] = await this.boardRepository.find({
+      relations: ['emotions', 'comments'],
+    });
     this.logger.debug(JSON.stringify(boards));
     return boards;
   }
@@ -87,7 +88,7 @@ export class BoardService {
     board.content = body.content;
     board.tags = JSON.stringify(body.tags);
     board.status = body.status as BoardStatus;
-    
+
     this.logger.debug(JSON.stringify(board));
 
     return await this.boardRepository.save(board);
@@ -144,24 +145,35 @@ export class BoardService {
     return board.comments;
   }
 
-  async addComment(boardId: number, userEmail: string, comment: CommentDto): Promise<CommentEntity> {
+  async addComment(
+    boardId: number,
+    userEmail: string,
+    comment: CommentDto,
+  ): Promise<CommentEntity> {
     this.logger.debug('addComment');
 
     const userId: number = (
       await this.userRepository.findOne({ where: { email: userEmail } })
     ).id;
 
-    const board: BoardEntity = await this.boardRepository.findOne({where: {id: boardId}});
+    const board: BoardEntity = await this.boardRepository.findOne({
+      where: { id: boardId },
+    });
 
     if (board == null) {
       throw new Error('board not found');
     }
 
-    if (comment.parentId == null) { // 부모없는 댓글의 경우
-      const commentsRef = await this.commentRepository.createQueryBuilder()
-      .select('NVL(MAX(ref), 0) as ref')
-      .where('boardId = :boardId', {boardId: boardId})
-      .getRawOne().then((result) => { return result.ref });
+    if (comment.parentId == null) {
+      // 부모없는 댓글의 경우
+      const commentsRef = await this.commentRepository
+        .createQueryBuilder()
+        .select('NVL(MAX(ref), 0) as ref')
+        .where('boardId = :boardId', { boardId: boardId })
+        .getRawOne()
+        .then((result) => {
+          return result.ref;
+        });
 
       const newComment: CommentEntity = new CommentEntity();
       newComment.content = comment.content;
@@ -172,12 +184,15 @@ export class BoardService {
       newComment.step = 0;
       newComment.answerNum = 0;
       newComment.parentId = null;
-  
+
       return await this.commentRepository.save(newComment);
-    } else { // 부모있는 댓글(대댓글)의 경우
-      const parentComment: CommentEntity = await this.commentRepository.findOne({where: {id: comment.parentId}});
-      const parentResult = await this.commentRefOrderAndUpdate(parentComment)
-      
+    } else {
+      // 부모있는 댓글(대댓글)의 경우
+      const parentComment: CommentEntity = await this.commentRepository.findOne(
+        { where: { id: comment.parentId } },
+      );
+      const parentResult = await this.commentRefOrderAndUpdate(parentComment);
+
       if (parentResult == null) {
         throw new Error('부모댓글이 없습니다.');
       }
@@ -191,27 +206,34 @@ export class BoardService {
       newComment.step = parentComment.step + 1;
       newComment.answerNum = 0;
       newComment.parentId = comment.parentId;
-      
+
       const savedComment = await this.commentRepository.save(newComment);
 
-      await this.commentRepository.createQueryBuilder()
-      .update()
-      .set({answerNum: parentComment.answerNum + 1})
-      .where('id = :id', {id: comment.parentId})
-      .execute();
+      await this.commentRepository
+        .createQueryBuilder()
+        .update()
+        .set({ answerNum: parentComment.answerNum + 1 })
+        .where('id = :id', { id: comment.parentId })
+        .execute();
 
       return savedComment;
     }
   }
 
-  async updateComment(userEmail: string, commentId: number, updateComment: CommentDto) {
+  async updateComment(
+    userEmail: string,
+    commentId: number,
+    updateComment: CommentDto,
+  ) {
     this.logger.debug('updateComment');
 
     const userId: number = (
       await this.userRepository.findOne({ where: { email: userEmail } })
     ).id;
 
-    const comment: CommentEntity = await this.commentRepository.findOne({where: {id: commentId}});
+    const comment: CommentEntity = await this.commentRepository.findOne({
+      where: { id: commentId },
+    });
     if (comment.userId != userId) {
       return { code: 400, message: 'invalid user' } as ApiResponse;
     }
@@ -222,58 +244,75 @@ export class BoardService {
     return { code: 200, message: 'update comment success' } as ApiResponse;
   }
 
-  async deleteComment(commentId: number, userEmail: string): Promise<ApiResponse> {
+  async deleteComment(
+    commentId: number,
+    userEmail: string,
+  ): Promise<ApiResponse> {
     this.logger.debug('deleteComment');
 
     const userId: number = (
       await this.userRepository.findOne({ where: { email: userEmail } })
     ).id;
 
-    const comment: CommentEntity = await this.commentRepository.findOne({where: {id: commentId}});
+    const comment: CommentEntity = await this.commentRepository.findOne({
+      where: { id: commentId },
+    });
     if (comment.userId != userId) {
       return { code: 400, message: 'invalid user' } as ApiResponse;
     }
 
-    await this.commentRepository.delete({id: commentId});
+    await this.commentRepository.delete({ id: commentId });
 
     return { code: 200, message: 'delete comment success' } as ApiResponse;
   }
 
-  private async commentRefOrderAndUpdate(comment: CommentEntity): Promise<number> {
+  private async commentRefOrderAndUpdate(
+    comment: CommentEntity,
+  ): Promise<number> {
     const saveStep: number = comment.step + 1;
     const refOrder = comment.refOrder;
     const ref = comment.ref;
     const answerNum = comment.answerNum;
 
-    const answerNumSum: number = await this.commentRepository.createQueryBuilder()
-    .select('SUM(answerNum) as sum')
-    .where('ref = :ref', {ref: ref})
-    .getRawOne().then((result) => { return result.sum });
-    const maxStep: number = await this.commentRepository.createQueryBuilder()
-    .select('MAX(step) as max')
-    .where('ref = :ref', {ref: ref})
-    .getRawOne().then((result) => { return result.max });
+    const answerNumSum: number = await this.commentRepository
+      .createQueryBuilder()
+      .select('SUM(answerNum) as sum')
+      .where('ref = :ref', { ref: ref })
+      .getRawOne()
+      .then((result) => {
+        return result.sum;
+      });
+    const maxStep: number = await this.commentRepository
+      .createQueryBuilder()
+      .select('MAX(step) as max')
+      .where('ref = :ref', { ref: ref })
+      .getRawOne()
+      .then((result) => {
+        return result.max;
+      });
 
     if (saveStep < maxStep) {
-      return await answerNumSum + 1;
+      return (await answerNumSum) + 1;
     } else if (saveStep == maxStep) {
-      this.commentRepository.createQueryBuilder()
-      .update()
-      .set({refOrder: refOrder + 1})
-      .where('ref = :ref', {ref: ref})
-      .andWhere('refOrder > :refOrder', {refOrder: refOrder + answerNum})
-      .execute();
+      this.commentRepository
+        .createQueryBuilder()
+        .update()
+        .set({ refOrder: refOrder + 1 })
+        .where('ref = :ref', { ref: ref })
+        .andWhere('refOrder > :refOrder', { refOrder: refOrder + answerNum })
+        .execute();
 
-      return await refOrder + answerNum + 1;
+      return (await refOrder) + answerNum + 1;
     } else if (saveStep > maxStep) {
-      this.commentRepository.createQueryBuilder()
-      .update()
-      .set({refOrder: refOrder + 1})
-      .where('ref = :ref', {ref: ref})
-      .andWhere('refOrder > :refOrder', {refOrder: refOrder + answerNum})
-      .execute();
+      this.commentRepository
+        .createQueryBuilder()
+        .update()
+        .set({ refOrder: refOrder + 1 })
+        .where('ref = :ref', { ref: ref })
+        .andWhere('refOrder > :refOrder', { refOrder: refOrder + answerNum })
+        .execute();
 
-      return await refOrder + 1;
+      return (await refOrder) + 1;
     }
 
     return null;

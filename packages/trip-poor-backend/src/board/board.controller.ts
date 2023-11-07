@@ -14,7 +14,13 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { BoardService } from './board.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateBoardDto } from './interfaces/CreateBoardDto';
 import { AuthGuard } from '@nestjs/passport';
 import { BoardEntity } from '../entities/boardEntity.entity';
@@ -95,15 +101,22 @@ export class BoardController {
   async deleteBoard(
     @Req() req: Request,
     @Res() res: Response,
-    @Param('id') id: number
+    @Param('id') id: number,
   ) {
     const userEmail = req.user.email;
     return res.json(await this.boardService.deleteBoard(id, userEmail));
   }
 
-  @ApiOperation({ summary: '게시물에 반응 추가', description: '게시물에 반응을 추가합니다.' })
+  @ApiOperation({
+    summary: '게시물에 반응 추가',
+    description: '게시물에 반응을 추가합니다.',
+  })
   @ApiBearerAuth('Authorization')
-  @ApiResponse({ status: 200, description: 'add emotion success', type: ApiResponse })
+  @ApiResponse({
+    status: 200,
+    description: 'add emotion success',
+    type: ApiResponse,
+  })
   @Put(':id/emotion')
   @UseGuards(AuthGuard('jwt'))
   async updateEmotion(
@@ -121,11 +134,20 @@ export class BoardController {
       return res.json({ code: 400, message: 'emotion is not valid' });
     }
 
-    return res.json(await this.boardService.updateEmotion(boardId, userEmail, emotion));
+    return res.json(
+      await this.boardService.updateEmotion(boardId, userEmail, emotion),
+    );
   }
 
-  @ApiOperation({ summary: '게시물 댓글 조회', description: '게시물의 댓글을 조회합니다.' })
-  @ApiResponse({ status: 200, description: 'get comment success', type: ApiResponse })
+  @ApiOperation({
+    summary: '게시물 댓글 조회',
+    description: '게시물의 댓글을 조회합니다.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'get comment success',
+    type: ApiResponse,
+  })
   @Get(':id/comment')
   async getComment(
     @Req() req: Request,
@@ -135,14 +157,21 @@ export class BoardController {
     return res.json(await this.boardService.getComments(boardId));
   }
 
-  @ApiOperation({ summary: '게시물에 댓글 추가', description: '게시물에 댓글을 추가합니다.' })
+  @ApiOperation({
+    summary: '게시물에 댓글 추가',
+    description: '게시물에 댓글을 추가합니다.',
+  })
   @ApiBody({
     type: CommentDto,
     description: '댓글 생성 정보',
     required: true,
   })
   @ApiBearerAuth('Authorization')
-  @ApiResponse({ status: 200, description: 'add comment success', type: ApiResponse })
+  @ApiResponse({
+    status: 200,
+    description: 'add comment success',
+    type: ApiResponse,
+  })
   @Post(':id/comment')
   @UseGuards(AuthGuard('jwt'))
   async addComment(
@@ -158,12 +187,21 @@ export class BoardController {
       return res.json({ code: 400, message: 'content is not valid' });
     }
 
-    return res.json(await this.boardService.addComment(boardId, userEmail, body));
+    return res.json(
+      await this.boardService.addComment(boardId, userEmail, body),
+    );
   }
 
-  @ApiOperation({ summary: '게시물 댓글 수정', description: '게시물의 댓글을 수정합니다.' })
+  @ApiOperation({
+    summary: '게시물 댓글 수정',
+    description: '게시물의 댓글을 수정합니다.',
+  })
   @ApiBearerAuth('Authorization')
-  @ApiResponse({ status: 200, description: 'update comment success', type: ApiResponse })
+  @ApiResponse({
+    status: 200,
+    description: 'update comment success',
+    type: ApiResponse,
+  })
   @Put(':id/comment')
   @UseGuards(AuthGuard('jwt'))
   async updateComment(
@@ -179,12 +217,21 @@ export class BoardController {
       return res.json({ code: 400, message: 'content is not valid' });
     }
 
-    return res.json(await this.boardService.updateComment(userEmail, commentId, body));
+    return res.json(
+      await this.boardService.updateComment(userEmail, commentId, body),
+    );
   }
 
-  @ApiOperation({ summary: '게시물 댓글 삭제', description: '게시물의 댓글을 삭제합니다.' })
+  @ApiOperation({
+    summary: '게시물 댓글 삭제',
+    description: '게시물의 댓글을 삭제합니다.',
+  })
   @ApiBearerAuth('Authorization')
-  @ApiResponse({ status: 200, description: 'delete comment success', type: ApiResponse })
+  @ApiResponse({
+    status: 200,
+    description: 'delete comment success',
+    type: ApiResponse,
+  })
   @Delete(':id/comment')
   @UseGuards(AuthGuard('jwt'))
   async deleteComment(
@@ -194,6 +241,8 @@ export class BoardController {
     @Query('commentId') commentId: number,
   ) {
     const userEmail = req.user.email;
-    return res.json(await this.boardService.deleteComment(commentId, userEmail));
+    return res.json(
+      await this.boardService.deleteComment(commentId, userEmail),
+    );
   }
 }

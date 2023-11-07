@@ -1,13 +1,18 @@
-import { BaseEntity } from "../utils/base.entity";
-import { IsEnum, IsNumber } from "class-validator";
-import { Emotion } from "../utils/enum/emotion";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { ApiProperty } from "@nestjs/swagger";
-import { BoardEntity } from "./boardEntity.entity";
+import { BaseEntity } from '../utils/base.entity';
+import { IsEnum, IsNumber } from 'class-validator';
+import { Emotion } from '../utils/enum/emotion';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { BoardEntity } from './boardEntity.entity';
 
 @Entity('Emotion')
 export class EmotionEntity extends BaseEntity {
-  
   @PrimaryGeneratedColumn()
   @IsNumber()
   id: number;

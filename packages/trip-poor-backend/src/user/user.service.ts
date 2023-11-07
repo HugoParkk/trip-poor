@@ -22,12 +22,18 @@ export class UserService {
     return user;
   }
 
-  async updateUserProfile(email: string, profile: UpdateUserDto): Promise<ApiResponse> {
+  async updateUserProfile(
+    email: string,
+    profile: UpdateUserDto,
+  ): Promise<ApiResponse> {
     this.logger.debug('updateUserProfile');
-    
+
     const user = await this.userRepository.findOne({ where: { email: email } });
     if (user.id != profile.id) {
-      return { code: HttpStatusCode.BadRequest, message: 'invalid user id'} as ApiResponse
+      return {
+        code: HttpStatusCode.BadRequest,
+        message: 'invalid user id',
+      } as ApiResponse;
     }
 
     user.name = profile.name;
@@ -35,6 +41,6 @@ export class UserService {
     user.description = profile.description;
     await this.userRepository.save(user);
 
-    return { code: 200, message: 'update profile success'} as ApiResponse;
+    return { code: 200, message: 'update profile success' } as ApiResponse;
   }
 }

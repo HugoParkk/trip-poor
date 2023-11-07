@@ -1,7 +1,13 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 import { BaseEntity } from '../utils/base.entity';
 import { BoardStatus } from '../utils/enum/boardStatus';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, JoinColumn, ManyToOne, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { EmotionEntity } from './emotionEntity.entity';
 import { CommentEntity } from './commentEntity.entity';

@@ -8,7 +8,14 @@ import { UserEntity } from 'src/entities/userEntity.entity';
 import { CommentEntity } from 'src/entities/commentEntity.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BoardEntity, UserEntity, EmotionEntity, CommentEntity])],
+  imports: [
+    TypeOrmModule.forFeature([
+      BoardEntity,
+      UserEntity,
+      EmotionEntity,
+      CommentEntity,
+    ]),
+  ],
   providers: [BoardService],
   controllers: [BoardController],
 })
