@@ -43,4 +43,13 @@ export class UserService {
 
     return { code: 200, message: 'update profile success' } as ApiResponse;
   }
+
+  async deleteUserProfile(email: string): Promise<ApiResponse> {
+    this.logger.debug('deleteUserProfile');
+
+    const user = await this.userRepository.findOne({ where: { email: email } });
+    await this.userRepository.remove(user);
+
+    return { code: 200, message: 'delete profile success' } as ApiResponse;
+  }
 }

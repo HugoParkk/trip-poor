@@ -65,6 +65,6 @@ export class UserController {
   async deleteUserProfile(@Req() req: Request, @Res() res: Response) {
     // TODO: 유저 프로필 삭제
     // 회원 탈퇴
-    // return
+    return this.userService.deleteUserProfile(req.user.email);
   }
 }
