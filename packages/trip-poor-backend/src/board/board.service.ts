@@ -33,7 +33,7 @@ export class BoardService {
     const boards: BoardEntity[] = await this.boardRepository.find({
       relations: ['emotions', 'comments'],
     });
-    this.logger.debug(JSON.stringify(boards));
+    
     return boards;
   }
 
