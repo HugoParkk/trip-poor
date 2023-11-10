@@ -22,20 +22,34 @@ export class UserService {
     return user;
   }
 
-  async updateUserProfile(email: string, profile: UpdateUserDto): Promise<ApiResponse> {
+  async updateUserProfile(
+    email: string,
+    profile: UpdateUserDto,
+  ): Promise<ApiResponse> {
     this.logger.debug('updateUserProfile');
-    
+
     const user = await this.userRepository.findOne({ where: { email: email } });
     if (user.id != profile.id) {
-      return { code: HttpStatusCode.BadRequest, message: 'invalid user id'} as ApiResponse
+      return {
+        code: HttpStatusCode.BadRequest,
+        message: 'invalid user id',
+      } as ApiResponse;
     }
 
     user.name = profile.name;
     user.avatar = profile.avatar;
     user.description = profile.description;
-
     await this.userRepository.save(user);
 
-    return { code: 200, message: 'update profile success'} as ApiResponse;
+    return { code: 200, message: 'update profile success' } as ApiResponse;
+  }
+
+  async deleteUserProfile(email: string): Promise<ApiResponse> {
+    this.logger.debug('deleteUserProfile');
+
+    const user = await this.userRepository.findOne({ where: { email: email } });
+    await this.userRepository.remove(user);
+
+    return { code: 200, message: 'delete profile success' } as ApiResponse;
   }
 }

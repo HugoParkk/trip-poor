@@ -40,7 +40,7 @@ import { UserModule } from './user/user.module';
     {
       provide: APP_PIPE,
       useClass: ValidationPipe,
-    }
+    },
   ],
 })
 export class AppModule {}
