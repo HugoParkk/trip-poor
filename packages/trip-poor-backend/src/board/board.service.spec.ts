@@ -31,29 +31,29 @@ const mockBoards = [
   },
 ];
 
-// const mockEmotions = [
-//   {
-//     createdAt: '2023-09-26T12:00:31.012Z' as any,
-//     updatedAt: '2023-09-26T12:00:31.012Z' as any,
-//     boardId: 1,
-//     userId: 1,
-//     emotion: Emotion.LIKE,
-//   },
-//   {
-//     createdAt: '2023-09-26T12:00:31.012Z' as any,
-//     updatedAt: '2023-09-26T12:00:31.012Z' as any,
-//     boardId: 1,
-//     userId: 2,
-//     emotion: Emotion.DISLIKE,
-//   },
-//   {
-//     createdAt: '2023-09-26T12:00:31.012Z' as any,
-//     updatedAt: '2023-09-26T12:00:31.012Z' as any,
-//     boardId: 1,
-//     userId: 3,
-//     emotion: Emotion.LIKE,
-//   },
-// ];
+const mockEmotions = [
+  {
+    createdAt: '2023-09-26T12:00:31.012Z' as any,
+    updatedAt: '2023-09-26T12:00:31.012Z' as any,
+    boardId: 1,
+    userId: 1,
+    emotion: Emotion.LIKE,
+  },
+  {
+    createdAt: '2023-09-26T12:00:31.012Z' as any,
+    updatedAt: '2023-09-26T12:00:31.012Z' as any,
+    boardId: 1,
+    userId: 2,
+    emotion: Emotion.DISLIKE,
+  },
+  {
+    createdAt: '2023-09-26T12:00:31.012Z' as any,
+    updatedAt: '2023-09-26T12:00:31.012Z' as any,
+    boardId: 1,
+    userId: 3,
+    emotion: Emotion.LIKE,
+  },
+];
 
 describe('BoardService', () => {
   let service: BoardService;
