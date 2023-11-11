@@ -63,8 +63,7 @@ export class UserController {
   @Delete()
   @UseGuards(AuthGuard('jwt'))
   async deleteUserProfile(@Req() req: Request, @Res() res: Response) {
-    // TODO: 유저 프로필 삭제
-    // 회원 탈퇴
-    return this.userService.deleteUserProfile(req.user.email);
+    const userEmail = req.user.email;
+    return this.userService.deleteUserProfile(userEmail);
   }
 }
