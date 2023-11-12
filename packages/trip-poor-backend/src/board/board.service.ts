@@ -301,7 +301,6 @@ export class BoardService {
         .where('ref = :ref', { ref: ref })
         .andWhere('refOrder > :refOrder', { refOrder: refOrder + answerNum })
         .execute();
-
       return (await refOrder) + answerNum + 1;
     } else if (saveStep > maxStep) {
       this.commentRepository
@@ -311,7 +310,6 @@ export class BoardService {
         .where('ref = :ref', { ref: ref })
         .andWhere('refOrder > :refOrder', { refOrder: refOrder + answerNum })
         .execute();
-
       return (await refOrder) + 1;
     }
 
