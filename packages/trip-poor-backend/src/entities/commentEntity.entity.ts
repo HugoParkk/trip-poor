@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from 'src/utils/base.entity';
 import {
   Column,
@@ -48,6 +48,7 @@ export class CommentEntity extends BaseEntity {
   @ApiProperty({ description: '상위 댓글 ID', default: 1 })
   @Column({ nullable: true, default: null })
   @IsNumber()
+  @IsOptional()
   parentId: number | null;
 
   @ApiProperty({ description: '게시글 고유 번호', default: 1 })
